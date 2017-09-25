@@ -1,4 +1,4 @@
-# Computer Graphics with Java
+# Game of Tetris with Java
  This repository includes several computer graphics projects with Java, every latter project is based on all previous projects.
  
 ## Project 1
