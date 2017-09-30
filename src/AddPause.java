@@ -1,6 +1,3 @@
-package Q2;
-
-
 import java.awt.*;
 
 public class AddPause {

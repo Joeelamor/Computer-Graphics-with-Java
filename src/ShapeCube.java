@@ -1,15 +1,19 @@
-package Q2;
-
 import java.awt.*;
 
-public class ShapeCube extends ShapeTransformation {
-    public void draw(Graphics g, Point origin, int length) {
-        g.setColor(new Color(0, 176, 80));
-        g.fillRect(origin.x, origin.y, 2 * length, 2 * length);
-        g.setColor(Color.black);
-        g.drawRect(origin.x, origin.y, length, length);
-        g.drawRect(origin.x + length, origin.y, length, length);
-        g.drawRect(origin.x, origin.y + length, length, length);
-        g.drawRect(origin.x + length, origin.y + length, length, length);
+public class ShapeCube extends Shape {
+    public ShapeCube(Graphics g, int[][] area, Point origin, int length) {
+//        super(g, area, origin, length);
+        this.shape[0][0] = 4;
+        this.shape[0][1] = 0;
+
+        this.shape[1][0] = 5;
+        this.shape[1][1] = 0;
+
+        this.shape[2][0] = 4;
+        this.shape[2][1] = 1;
+
+        this.shape[3][0] = 5;
+        this.shape[3][1] = 1;
+        this.color = new Color(0, 176, 80);
     }
 }

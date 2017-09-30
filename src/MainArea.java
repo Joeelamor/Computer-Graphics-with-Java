@@ -1,102 +1,119 @@
-package Q2;
-
 import java.awt.*;
 import java.awt.event.*;
 
 public class MainArea extends Canvas implements MouseMotionListener, MouseListener {
 
-    public Point startPause;
-    public Point quitPosition;
-    public int squreLen;
-    public boolean hide = true;
+    private Point startMainErea;
+    private Point startRightErea;
+    private Point quitPosition;
+    private int squareLen;
+    private boolean pause = false;
+    private int[][]area = new int[20][10];
+    private Shape currentShape = null, nextShape = null;
+
+
 
     public void paint(Graphics g)
 
     {
         Dimension d = getSize();
         int maxX = d.width - 1, maxY = d.height - 1;
-        squreLen = Math.min(maxX / 50, maxY / 30);
+        squareLen = Math.min(maxX / 50, maxY / 30);
 
         // Set main area positon.
-        startPause = new Point(16 * squreLen, 5 * squreLen);
-        g.drawRect(16 * squreLen, 5 * squreLen, 10 * squreLen, 20 * squreLen);
-
-        // Draw top green shape.
-        Point originTop = new Point(20 * squreLen, 7 * squreLen);
-        ShapeCube cube = new ShapeCube();
-        cube.draw(g, originTop, squreLen);
-
-        // Draw bottom yellow shape.
-        Point originBottomS = new Point(22 * squreLen, 24 * squreLen);
-        ShapeS shapeS = new ShapeS();
-        shapeS.draw(g, originBottomS, squreLen);
-
-        // Draw bottem blue shape.
-        Point originBottomJ = new Point(24 * squreLen, 24 * squreLen);
-        ShapeJ shapeJ = new ShapeJ();
-        shapeJ.draw(g, originBottomJ, squreLen);
+        startMainErea = new Point(16 * squareLen, 5 * squareLen);
+        g.drawRect(16 * squareLen, 5 * squareLen, 10 * squareLen, 20 * squareLen);
 
         // Set right area.
-        g.drawRect(27 * squreLen, 6 * squreLen, 5 * squreLen, 4 * squreLen);
+        startRightErea = new Point(25 * squareLen, 6 * squareLen);
+        g.drawRect(27 * squareLen, 5 * squareLen, 6 * squareLen, 4 * squareLen);
 
-        // Draw right red shape.
-        Point originRightL = new Point(28 * squreLen, 8 * squreLen);
-        ShapeL shapeL = new ShapeL();
-        shapeL.draw(g, originRightL, squreLen);
+
+        Util.getRandomShape(g, area, startRightErea, squareLen);
+
+
+        if (currentShape == null)
+            currentShape = Util.getCurrentShape();
+//        currentShape.reset(g, startMainErea, squareLen);
+//        currentShape.draw();
+        this.drawShape(g, startMainErea, currentShape.getShape(), currentShape.getColor());
+
+
+        if (nextShape == null)
+            nextShape = Util.getNextShape();
+//        nextShape.reset(g, startRightErea, squareLen);
+        this.drawShape(g, startRightErea, nextShape.getShape(), nextShape.getColor());
+
 
         // Add text.
         AddText text = new AddText();
         // Level information.
-        Point levelPosition = new Point(27 * squreLen, 14 * squreLen);
-        text.setString(g, "Level:", levelPosition, squreLen);
-        text.setValue(g, 1, levelPosition, squreLen);
+        Point levelPosition = new Point(27 * squareLen, 14 * squareLen);
+        text.setString(g, "Level:", levelPosition, squareLen);
+        text.setValue(g, 1, levelPosition, squareLen);
 
         // Lines information.
-        Point linesPosition = new Point(27 * squreLen, 16 * squreLen);
-        text.setString(g, "Lines:", linesPosition, squreLen);
-        text.setValue(g, 0, linesPosition, squreLen);
+        Point linesPosition = new Point(27 * squareLen, 16 * squareLen);
+        text.setString(g, "Lines:", linesPosition, squareLen);
+        text.setValue(g, 0, linesPosition, squareLen);
 
         // Scores information.
-        Point scoresPosition = new Point(27 * squreLen, 18 * squreLen);
-        text.setString(g, "Score:", scoresPosition, squreLen);
-        text.setValue(g, 0, scoresPosition, squreLen);
+        Point scoresPosition = new Point(27 * squareLen, 18 * squareLen);
+        text.setString(g, "Score:", scoresPosition, squareLen);
+        text.setValue(g, 0, scoresPosition, squareLen);
 
         // Add pause information.
-        if (!hide) {
-            Point pausePosition = new Point(18 * squreLen, 14 * squreLen);
+        if (pause) {
+            Point pausePosition = new Point(18 * squareLen, 14 * squareLen);
             AddPause pause = new AddPause();
-            pause.add(g, pausePosition, squreLen);
+            pause.add(g, pausePosition, squareLen);
         }
 
 
         // Add quit button.
-        quitPosition = new Point(27 * squreLen, 24 * squreLen);
+        quitPosition = new Point(27 * squareLen, 24 * squareLen);
         QuitButton button = new QuitButton();
-        button.QuitButton(g, quitPosition, squreLen);
+        button.QuitButton(g, quitPosition, squareLen);
 
         addMouseMotionListener(this);
         addMouseListener(this);
+    }
+
+    public void drawShape(Graphics g, Point origin, int[][] shape, Color color){
+        for (int []arr : shape) {
+            g.setColor(color);
+            g.fillRect(origin.x + arr[0] * squareLen, origin.y + arr[1] * squareLen, squareLen, squareLen);
+            g.setColor(Color.black);
+            g.drawRect(origin.x + arr[0] * squareLen, origin.y + arr[1] * squareLen, squareLen, squareLen);
+        }
     }
 
 
     @Override
     public void mouseMoved(MouseEvent e) {
         int x = e.getX(), y = e.getY();
-        if (x >= startPause.getX() && x <= startPause.getX() + 10 * squreLen &&
-                y >= startPause.getY() && y <= startPause.getY() + 20 * squreLen) {
-            hide = false;
-            this.repaint();
-        } else {
-            hide = true;
+        boolean MouseInMainAre = x >= startMainErea.getX() && x <= startMainErea.getX() + 10 * squareLen &&
+                y >= startMainErea.getY() && y <= startMainErea.getY() + 20 * squareLen;
+//        if (x >= startMainErea.getX() && x <= startMainErea.getX() + 10 * squareLen &&
+//                y >= startMainErea.getY() && y <= startMainErea.getY() + 20 * squareLen) {
+//            pause = false;
+//            this.repaint();
+//        } else {
+//            pause = true;
+//        }
+
+        if (pause != MouseInMainAre) {
+            pause = MouseInMainAre;
             this.repaint();
         }
+
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = e.getX(), y = e.getY();
-        if (x >= quitPosition.getX() && x <= quitPosition.getX() + squreLen * 14 / 5 &&
-                y >= quitPosition.getY() && y <= quitPosition.getY() + squreLen * 3 / 2) {
+        if (x >= quitPosition.getX() && x <= quitPosition.getX() + squareLen * 14 / 5 &&
+                y >= quitPosition.getY() && y <= quitPosition.getY() + squareLen * 3 / 2) {
             System.exit(0);
         }
     }

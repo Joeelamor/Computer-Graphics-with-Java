@@ -1,5 +1,3 @@
-package Q2;
-
 import java.awt.*;
 
 public class AddText extends Text {

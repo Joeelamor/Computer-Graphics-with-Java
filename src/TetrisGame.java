@@ -1,5 +1,3 @@
-package Q2;
-
 import java.awt.*;
 import java.awt.event.*;
 
@@ -9,7 +7,7 @@ public class TetrisGame extends Frame {
     }
 
     TetrisGame() {
-        super("Q2");
+        super("Tetris Game");
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
