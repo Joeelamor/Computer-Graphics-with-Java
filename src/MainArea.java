@@ -95,8 +95,7 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
     private void drawQuit(Graphics g) {
         // Add quit button.
         this.quitPosition = new Point(27 * squareLen, 24 * squareLen);
-        QuitButton button = new QuitButton();
-        button.QuitButton(g, quitPosition, squareLen);
+        QuitButton.QuitButton(g, quitPosition, squareLen);
     }
 
     private void drawPause(Graphics g) {

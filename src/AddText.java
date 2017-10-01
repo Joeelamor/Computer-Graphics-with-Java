@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class AddText extends Text {
+public class AddText {
     public void setString(Graphics g, String s, Point origin, int length) {
         // Set text size.
         g.setFont(new Font("default", Font.BOLD, length * 2 / 3));
