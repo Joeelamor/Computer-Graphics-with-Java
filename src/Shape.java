@@ -1,50 +1,137 @@
-import java.awt.*;
+//import java.awt.*;
+
+import java.util.Arrays;
+import java.util.Random;
+import java.util.TimerTask;
 
 public class Shape {
-    Color color;
-    int [][]shape = new int[4][2];
+
+    public enum ShapeType {
+        NULL, I, J, L, S, T, Z, C
+    }
+
+    class Coordinate {
+        int x;
+        int y;
+
+        public Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+    }
+
+    //    Color color;
+    ShapeType type;
+    int[][] shape = new int[4][2];
 
     public Shape() {
     }
 
-//    public Shape(Graphics g, int[][] area, Point origin, int length) {
-//        this.g = g;
-//        this.area = area;
-//        this.origin = origin;
-//        this.length = length;
-//    }
+    public Shape(ShapeType type, int[][] shape) {
+        this.type = type;
+        this.shape = shape;
+    }
 
-//    public void draw(){
-//        for (int []arr : shape) {
-//            g.setColor(this.color);
-//            g.fillRect(origin.x + arr[0] * length, origin.y + arr[1] * length, length, length);
-//            g.setColor(Color.black);
-//            g.drawRect(origin.x + arr[0] * length, origin.y + arr[1] * length, length, length);
-//        }
-//    }
-//
-//
-//    public void reset(Graphics g, Point origin, int length) {
-//        this.g = g;
-//        this.origin = origin;
-//        this.length = length;
-//    }
+    public static Shape getRandomShape() {
+        Random random = new Random();
+        switch (random.nextInt(7)) {
+            case 0:
+                return (new ShapeCube());
+            case 1:
+                return (new ShapeI());
+            case 2:
+                return (new ShapeJ());
+            case 3:
+                return (new ShapeL());
+            case 4:
+                return (new ShapeZ());
+            case 5:
+                return (new ShapeS());
+            case 6:
+                return (new ShapeT());
+        }
+        return null;
+    }
 
-    public Color getColor() {
-        return color;
+    public ShapeType getType() {
+        return type;
     }
 
     public int[][] getShape() {
         return shape;
     }
 
-    public void moveLeft() {
+    public Shape moveLeft() {
+        int[][] location = new int[4][2];
+
+        location[0][0] =  this.shape[0][0] - 1;
+        location[0][1] =  this.shape[0][1];
+
+        location[1][0] =  this.shape[1][0] - 1;
+        location[1][1] =  this.shape[1][1];
+
+        location[2][0] =  this.shape[2][0] - 1;
+        location[2][1] =  this.shape[2][1];
+
+        location[3][0] =  this.shape[3][0] - 1;
+        location[3][1] =  this.shape[3][1];
+
+        return new Shape(this.type, location);
     }
 
-    public void moveright() {
+    public Shape moveRight() {
+        int[][] location = new int[4][2];
+
+        location[0][0] =  this.shape[0][0] + 1;
+        location[0][1] =  this.shape[0][1];
+
+        location[1][0] =  this.shape[1][0] + 1;
+        location[1][1] =  this.shape[1][1];
+
+        location[2][0] =  this.shape[2][0] + 1;
+        location[2][1] =  this.shape[2][1];
+
+        location[3][0] =  this.shape[3][0] + 1;
+        location[3][1] =  this.shape[3][1];
+
+        return new Shape(this.type, location);
     }
 
     public void rotate() {
+    }
+
+    public Shape moveDown() {
+        int[][] location = new int[4][2];
+
+        location[0][0] =  this.shape[0][0];
+        location[0][1] =  this.shape[0][1] + 1;
+
+        location[1][0] =  this.shape[1][0];
+        location[1][1] =  this.shape[1][1] + 1;
+
+        location[2][0] =  this.shape[2][0];
+        location[2][1] =  this.shape[2][1] + 1;
+
+        location[3][0] =  this.shape[3][0];
+        location[3][1] =  this.shape[3][1] + 1;
+
+        return new Shape(this.type, location);
+    }
+
+    @Override
+    public String toString() {
+        return "Shape{" +
+                "type=" + type +
+                ", shape=" + Arrays.toString(shape) +
+                '}';
     }
 }
 

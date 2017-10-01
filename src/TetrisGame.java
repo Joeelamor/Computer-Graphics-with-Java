@@ -14,7 +14,7 @@ public class TetrisGame extends Frame {
             }
         });
         setSize(1500, 900);
-        add("Center", new MainArea());
+        add("Center", new MainArea(new Board()));
         setVisible(true);
     }
 }
