@@ -1,32 +1,45 @@
-import java.awt.*;
 
 public class ShapeT extends Shape {
-    @Override
-    public Shape rotateClockwise() {
-        return null;
-    }
 
-    @Override
-    public Shape rotateCounterClockwise() {
-        return null;
-    }
+    static final Coordinate[][] ShapeT = new Coordinate[][]{
+            {
+                    new Coordinate(0, 1),
+                    new Coordinate(1, 1),
+                    new Coordinate(2, 1),
+                    new Coordinate(1, 0)
+            },
+            {
+                    new Coordinate(1, 0),
+                    new Coordinate(1, 1),
+                    new Coordinate(1, 2),
+                    new Coordinate(2, 1)
+            },
+            {
+                    new Coordinate(0, 1),
+                    new Coordinate(1, 1),
+                    new Coordinate(2, 1),
+                    new Coordinate(1, 2)
+            },
+            {
+                    new Coordinate(1, 0),
+                    new Coordinate(1, 1),
+                    new Coordinate(1, 2),
+                    new Coordinate(0, 1)
+            },
+    };
 
-    public ShapeT(int[][] shape) {
-        super(shape);
+
+    public ShapeT(Coordinate base, int status) {
+        super(base);
+
+        this.type = ShapeType.T;
+        this.status = status;
+        this.coordinates = ShapeT;
     }
 
     public ShapeT() {
-        this.shape[0][0] = 4;
-        this.shape[0][1] = 1;
-
-        this.shape[1][0] = 5;
-        this.shape[1][1] = 0;
-
-        this.shape[2][0] = 5;
-        this.shape[2][1] = 1;
-
-        this.shape[3][0] = 6;
-        this.shape[3][1] = 1;
+        super(new Coordinate(4, 0));
         this.type = ShapeType.T;
+        this.coordinates = ShapeT;
     }
 }

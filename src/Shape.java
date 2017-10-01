@@ -1,6 +1,5 @@
 //import java.awt.*;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public abstract class Shape {
@@ -9,7 +8,7 @@ public abstract class Shape {
         NULL, I, J, L, S, T, Z, C
     }
 
-    class Coordinate {
+    static class Coordinate {
         int x;
         int y;
 
@@ -18,137 +17,119 @@ public abstract class Shape {
             this.y = y;
         }
 
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
+        @Override
+        public String toString() {
+            return "(" + x + "," + y + ")";
         }
     }
 
+
     //    Color color;
     ShapeType type;
-    int status = 0;
-    int[][] shape = new int[4][2];
+    int status;
+    Coordinate base;
+    Coordinate[][] coordinates;
 
     public Shape() {
     }
 
-    public Shape(int[][] shape) {
-        this.shape = shape;
+    public Shape(Coordinate base) {
+        this.status = 0;
+        this.base = base;
     }
 
-    public Shape(ShapeType type, int[][] shape) {
+    public Shape(ShapeType type, Coordinate base) {
         this.type = type;
-        this.shape = shape;
+        this.base = base;
     }
 
-    static Shape shapeOf(ShapeType type, int[][] shape) {
+    static Shape shapeOf(ShapeType type, Coordinate base, int status) {
         switch (type) {
-            case C: return new ShapeCube(shape);
-            case I: return new ShapeI(shape);
-            case J: return new ShapeJ(shape);
-            case L: return new ShapeL(shape);
-            case S: return new ShapeS(shape);
-            case T: return new ShapeT(shape);
-            case Z: return new ShapeZ(shape);
+            case C:
+                return new ShapeC(base, status);
+            case I:
+                return new ShapeI(base, status);
+            case J:
+                return new ShapeJ(base, status);
+            case L:
+                return new ShapeL(base, status);
+            case S:
+                return new ShapeS(base, status);
+            case T:
+                return new ShapeT(base, status);
+            case Z:
+                return new ShapeZ(base, status);
         }
-        return new ShapeCube(shape);
+        return new ShapeC(base, status);
     }
 
     public static Shape getRandomShape() {
         Random random = new Random();
         switch (random.nextInt(7)) {
             case 0:
-                return (new ShapeCube());
-            default:
+                return (new ShapeC());
+            case 1:
                 return (new ShapeI());
-//            case 2:
-//                return (new ShapeJ());
-//            case 3:
-//                return (new ShapeL());
-//            case 4:
-//                return (new ShapeZ());
-//            case 5:
-//                return (new ShapeS());
-//            case 6:
-//                return (new ShapeT());
+            case 2:
+                return (new ShapeJ());
+            case 3:
+                return (new ShapeL());
+            case 4:
+                return (new ShapeZ());
+            case 5:
+                return (new ShapeS());
+            case 6:
+                return (new ShapeT());
         }
-//        return null;
+        return null;
     }
 
     public ShapeType getType() {
         return type;
     }
 
-    public int[][] getShape() {
-        return shape;
+    public Coordinate[] getShape() {
+//        return shape;
+        return new Coordinate[]{
+                new Coordinate(this.base.x + this.coordinates[status][0].x, this.base.y + this.coordinates[status][0].y),
+                new Coordinate(this.base.x + this.coordinates[status][1].x, this.base.y + this.coordinates[status][1].y),
+                new Coordinate(this.base.x + this.coordinates[status][2].x, this.base.y + this.coordinates[status][2].y),
+                new Coordinate(this.base.x + this.coordinates[status][3].x, this.base.y + this.coordinates[status][3].y),
+        };
     }
 
+
     public Shape moveLeft() {
-        int[][] location = new int[4][2];
-
-        location[0][0] =  this.shape[0][0] - 1;
-        location[0][1] =  this.shape[0][1];
-
-        location[1][0] =  this.shape[1][0] - 1;
-        location[1][1] =  this.shape[1][1];
-
-        location[2][0] =  this.shape[2][0] - 1;
-        location[2][1] =  this.shape[2][1];
-
-        location[3][0] =  this.shape[3][0] - 1;
-        location[3][1] =  this.shape[3][1];
-
-        return Shape.shapeOf(this.type, location);
+        return Shape.shapeOf(this.type, new Coordinate(this.base.x - 1, this.base.y), this.status);
     }
 
     public Shape moveRight() {
-        int[][] location = new int[4][2];
-
-        location[0][0] =  this.shape[0][0] + 1;
-        location[0][1] =  this.shape[0][1];
-
-        location[1][0] =  this.shape[1][0] + 1;
-        location[1][1] =  this.shape[1][1];
-
-        location[2][0] =  this.shape[2][0] + 1;
-        location[2][1] =  this.shape[2][1];
-
-        location[3][0] =  this.shape[3][0] + 1;
-        location[3][1] =  this.shape[3][1];
-
-        return Shape.shapeOf(this.type, location);
+        return Shape.shapeOf(this.type, new Coordinate(this.base.x + 1, this.base.y), this.status);
     }
 
-    abstract public Shape rotateClockwise();
+    public Shape rotateClockwise() {
+        int status = (this.status + 1) % this.coordinates.length;
+        return Shape.shapeOf(this.type, base, status);
+    }
 
-    abstract public Shape rotateCounterClockwise();
+    public Shape rotateCounterClockwise() {
+
+        int status = (this.status - 1);
+        if (status < 0)
+            status = this.coordinates.length - 1;
+        return Shape.shapeOf(this.type, base, status);
+    }
 
     public Shape moveDown() {
-        int[][] location = new int[4][2];
-
-        location[0][0] =  this.shape[0][0];
-        location[0][1] =  this.shape[0][1] + 1;
-
-        location[1][0] =  this.shape[1][0];
-        location[1][1] =  this.shape[1][1] + 1;
-
-        location[2][0] =  this.shape[2][0];
-        location[2][1] =  this.shape[2][1] + 1;
-
-        location[3][0] =  this.shape[3][0];
-        location[3][1] =  this.shape[3][1] + 1;
-
-        return Shape.shapeOf(this.type, location);
+        return Shape.shapeOf(this.type, new Coordinate(this.base.x, this.base.y + 1), this.status);
     }
 
     @Override
     public String toString() {
         return "Shape{" +
                 "type=" + type +
-                ", shape=" + Arrays.toString(shape) +
+                ", status=" + status +
+                ", base=" + base +
                 '}';
     }
 }

@@ -97,14 +97,14 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
         this.repaint();
     }
 
-    public void drawShape(Graphics g, Point origin, int[][] shape, Shape.ShapeType type){
+    public void drawShape(Graphics g, Point origin, Shape.Coordinate[] cubes, Shape.ShapeType type){
 
         Color color;
 
         color = this.getColor(type);
 
-        for (int []arr : shape) {
-            this.drawRect(g, origin, arr[0], arr[1], color);
+        for (Shape.Coordinate cube : cubes) {
+            this.drawRect(g, origin, cube.x, cube.y, color);
         }
     }
 
@@ -219,8 +219,11 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
 
             System.out.println(num);
             if (num > 0)
+                for (int i = 0; i < num; i++)
+                    this.board.rotateClockwise();
+            else
                 for (int i = 0; i < Math.abs(num); i++)
-                    this.board.rotate();
+                    this.board.rotateCounterClockwise();
             this.mouseScrollTime = e.getWhen();
         }
     }

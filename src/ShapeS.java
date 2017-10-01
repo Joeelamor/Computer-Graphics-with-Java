@@ -1,33 +1,32 @@
-import java.awt.*;
 
 public class ShapeS extends Shape {
-    public ShapeS(int[][] shape) {
-        super(shape);
-    }
 
-    @Override
-    public Shape rotateClockwise() {
-        return null;
-    }
+    static final Coordinate[][] ShapeS = new Coordinate[][]{
+            {
+                    new Coordinate(1, 1),
+                    new Coordinate(2, 1),
+                    new Coordinate(0, 2),
+                    new Coordinate(1, 2)
+            },
+            {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 1),
+                    new Coordinate(1, 1),
+                    new Coordinate(1, 2)
+            },
+    };
 
-    @Override
-    public Shape rotateCounterClockwise() {
-        return null;
+    public ShapeS(Coordinate base, int status) {
+        super(base);
+
+        this.type = ShapeType.S;
+        this.status = status;
+        this.coordinates = ShapeS;
     }
 
     public ShapeS() {
-        this.shape[0][0] = 4;
-        this.shape[0][1] = 1;
-
-        this.shape[1][0] = 5;
-        this.shape[1][1] = 0;
-
-        this.shape[2][0] = 5;
-        this.shape[2][1] = 1;
-
-        this.shape[3][0] = 6;
-        this.shape[3][1] = 0;
-
+        super(new Coordinate(4, 0));
         this.type = ShapeType.S;
+        this.coordinates = ShapeS;
     }
 }
