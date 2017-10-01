@@ -1,7 +1,5 @@
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Board implements Runnable{
 
@@ -56,11 +54,6 @@ public class Board implements Runnable{
             this.getRandomShape();
         return cur;
     }
-//
-//    public Shape getNextShape() {
-//        return this.queue.peek();
-//    }
-
 
     public Shape getCurrentShape() {
         if (currentShape == null)
@@ -75,34 +68,25 @@ public class Board implements Runnable{
     public void run() {
         while (running) {
             synchronized (pauseLock) {
-                if (!running) { // may have changed while waiting to
-                    // synchronize on pauseLock
+                if (!running) {
                     break;
                 }
                 if (paused) {
                     try {
-                        pauseLock.wait(); // will cause this Thread to block until
-                        // another thread calls pauseLock.notifyAll()
-                        // Note that calling wait() will
-                        // relinquish the synchronized lock that this
-                        // thread holds on pauseLock so another thread
-                        // can acquire the lock to call notifyAll()
-                        // (link with explanation below this code)
+                        pauseLock.wait();
                     } catch (InterruptedException ex) {
                         break;
                     }
-                    if (!running) { // running might have changed since we paused
+                    if (!running) {
                         break;
                     }
                 }
             }
-            // Your code here
+
             if (this.over)
                 return;
 
             Shape next = this.getCurrentShape().moveDown();
-
-            System.out.println(next);
 
             if (validate(next))
                 currentShape = next;
@@ -113,7 +97,7 @@ public class Board implements Runnable{
                     this.over = true;
             }
             try {
-                Thread.sleep(200);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -121,21 +105,16 @@ public class Board implements Runnable{
     }
     public void stop() {
         running = false;
-        // you might also want to interrupt() the Thread that is
-        // running this Runnable, too, or perhaps call:
-        //resume();
-        // to unblock
     }
 
     public void pause() {
-        // you may want to throw an IllegalStateException if !running
         paused = true;
     }
 
     public void resume() {
         synchronized (pauseLock) {
             paused = false;
-            pauseLock.notifyAll(); // Unblocks thread
+            pauseLock.notifyAll();
         }
     }
 

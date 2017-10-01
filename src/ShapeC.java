@@ -1,14 +1,17 @@
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ShapeC extends Shape {
 
-    static final Coordinate[][] ShapeC = new Coordinate[][]{
-            {
-                    new Coordinate(0, 0),
-                    new Coordinate(0, 1),
-                    new Coordinate(1, 0),
-                    new Coordinate(1, 1)
-            },
-    };
+    static final List<List<Coordinate>> ShapeC = Collections.unmodifiableList(Arrays.asList(
+            Arrays.asList(
+                    new Coordinate(1, 1),
+                    new Coordinate(1, 2),
+                    new Coordinate(2, 1),
+                    new Coordinate(2, 2)
+            )
+    ));
 
     public ShapeC(Coordinate base, int status) {
         super(base);
@@ -19,7 +22,7 @@ public class ShapeC extends Shape {
     }
 
     public ShapeC() {
-        super(new Coordinate(4, 0));
+        super(new Coordinate(4, -1));
         this.type = ShapeType.C;
         this.coordinates = ShapeC;
     }

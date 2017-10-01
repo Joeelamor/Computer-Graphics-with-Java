@@ -1,5 +1,7 @@
 //import java.awt.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public abstract class Shape {
@@ -28,7 +30,7 @@ public abstract class Shape {
     ShapeType type;
     int status;
     Coordinate base;
-    Coordinate[][] coordinates;
+    List<List<Coordinate>> coordinates;
 
     public Shape() {
     }
@@ -88,14 +90,14 @@ public abstract class Shape {
         return type;
     }
 
-    public Coordinate[] getShape() {
+    public List<Coordinate> getShape() {
 //        return shape;
-        return new Coordinate[]{
-                new Coordinate(this.base.x + this.coordinates[status][0].x, this.base.y + this.coordinates[status][0].y),
-                new Coordinate(this.base.x + this.coordinates[status][1].x, this.base.y + this.coordinates[status][1].y),
-                new Coordinate(this.base.x + this.coordinates[status][2].x, this.base.y + this.coordinates[status][2].y),
-                new Coordinate(this.base.x + this.coordinates[status][3].x, this.base.y + this.coordinates[status][3].y),
-        };
+        return Arrays.asList(
+                new Coordinate(this.base.x + this.coordinates.get(status).get(0).x, this.base.y + this.coordinates.get(status).get(0).y),
+                new Coordinate(this.base.x + this.coordinates.get(status).get(1).x, this.base.y + this.coordinates.get(status).get(1).y),
+                new Coordinate(this.base.x + this.coordinates.get(status).get(2).x, this.base.y + this.coordinates.get(status).get(2).y),
+                new Coordinate(this.base.x + this.coordinates.get(status).get(3).x, this.base.y + this.coordinates.get(status).get(3).y)
+        );
     }
 
 
@@ -108,7 +110,7 @@ public abstract class Shape {
     }
 
     public Shape rotateClockwise() {
-        int status = (this.status + 1) % this.coordinates.length;
+        int status = (this.status + 1) % this.coordinates.size();
         return Shape.shapeOf(this.type, base, status);
     }
 
@@ -116,7 +118,7 @@ public abstract class Shape {
 
         int status = (this.status - 1);
         if (status < 0)
-            status = this.coordinates.length - 1;
+            status = this.coordinates.size() - 1;
         return Shape.shapeOf(this.type, base, status);
     }
 

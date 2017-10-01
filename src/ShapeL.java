@@ -1,32 +1,35 @@
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ShapeL extends Shape {
 
-    static final Coordinate[][] ShapeL = new Coordinate[][]{
-            {
+    static final List<List<Coordinate>> ShapeL = Collections.unmodifiableList(Arrays.asList(
+            Arrays.asList(
                     new Coordinate(0, 1),
                     new Coordinate(1, 1),
                     new Coordinate(2, 1),
                     new Coordinate(2, 0)
-            },
-            {
+            ),
+            Arrays.asList(
                     new Coordinate(1, 0),
                     new Coordinate(1, 1),
                     new Coordinate(1, 2),
                     new Coordinate(2, 2)
-            },
-            {
+            ),
+            Arrays.asList(
                     new Coordinate(0, 1),
                     new Coordinate(0, 2),
                     new Coordinate(1, 1),
                     new Coordinate(2, 1)
-            },
-            {
+            ),
+            Arrays.asList(
                     new Coordinate(0, 0),
                     new Coordinate(1, 0),
                     new Coordinate(1, 1),
                     new Coordinate(1, 2)
-            },
-    };
+            )
+    ));
 
 
     public ShapeL(Coordinate base, int status) {
