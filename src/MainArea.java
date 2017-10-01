@@ -1,10 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
 
-public class MainArea extends Canvas implements MouseMotionListener, MouseListener {
+public class MainArea extends Canvas implements MouseMotionListener, MouseListener, MouseWheelListener {
 
-    private boolean mouseEvent = false;
-    private long mouseEventTime = 0;
+    private long mouseClickTime = 0;
+    private long mouseScrollTime = 0;
 
     private Point startMainErea;
     private Point startRightErea;
@@ -92,6 +92,7 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
 
         addMouseMotionListener(this);
         addMouseListener(this);
+        addMouseWheelListener(this);
 
         this.repaint();
     }
@@ -182,7 +183,7 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
     @Override
     public void mousePressed(MouseEvent e) {
 
-        if (this.mouseEventTime < e.getWhen()) {
+        if (this.mouseClickTime < e.getWhen()) {
             int x = e.getX(), y = e.getY();
             if (x < startMainErea.getX() || x > startMainErea.getX() + 10 * squareLen ||
                     y < startMainErea.getY() || y > startMainErea.getY() + 20 * squareLen) {
@@ -192,7 +193,7 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
                 } else if (e.getButton() == MouseEvent.BUTTON3)
                     this.board.moveRight();
             }
-            this.mouseEventTime = e.getWhen();
+            this.mouseClickTime = e.getWhen();
         }
     }
 
@@ -209,5 +210,18 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        if (this.mouseScrollTime < e.getWhen()) {
+            int num = e.getUnitsToScroll();
+
+            System.out.println(num);
+            if (num > 0)
+                for (int i = 0; i < Math.abs(num); i++)
+                    this.board.rotate();
+            this.mouseScrollTime = e.getWhen();
+        }
     }
 }

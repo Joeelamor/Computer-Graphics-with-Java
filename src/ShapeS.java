@@ -1,8 +1,21 @@
 import java.awt.*;
 
 public class ShapeS extends Shape {
+    public ShapeS(int[][] shape) {
+        super(shape);
+    }
+
+    @Override
+    public Shape rotateClockwise() {
+        return null;
+    }
+
+    @Override
+    public Shape rotateCounterClockwise() {
+        return null;
+    }
+
     public ShapeS() {
-//        super(g, area, origin, length);
         this.shape[0][0] = 4;
         this.shape[0][1] = 1;
 
@@ -14,7 +27,6 @@ public class ShapeS extends Shape {
 
         this.shape[3][0] = 6;
         this.shape[3][1] = 0;
-//        this.color = new Color(255, 255, 0);
 
         this.type = ShapeType.S;
     }
