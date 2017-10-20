@@ -23,14 +23,15 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
             new Color(112, 48, 160),
 //            case C: return
             new Color(0, 176, 80)
+
     ));
-    private Point startMainArea;
+    private Point mainArea;
     private Point quitPosition;
     private int squareLen;
     private boolean pause = false;
 
     private Board board;
-    private Point startRightArea;
+    private Point rightArea;
 
     public MainArea(Board board) {
         this.board = board;
@@ -47,24 +48,30 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
     {
         Dimension d = getSize();
         int maxX = d.width - 1, maxY = d.height - 1;
-        squareLen = Math.min(maxX / 50, maxY / 30);
+//        squareLen = Math.min(maxX / (board.w * 2), maxY / (board.h * 3 / 2));
+
+        squareLen = Math.min(d.width / (board.w + 10), d.height / (board.h + 9));
+
+        int leftbound = (d.width - (board.w + 6) * squareLen) / (2 * squareLen);
+        int upperbound = (d.height - (board.h - 1) * squareLen) / (2 * squareLen);
+
 
         // Set main area position.
-        startMainArea = new Point(15 * squareLen, 5 * squareLen);
+        mainArea = new Point((leftbound - 1) * squareLen, upperbound * squareLen);
         // Set right area.
-        startRightArea = new Point(24 * squareLen, 6 * squareLen);
+        rightArea = new Point((leftbound + board.w) * squareLen, (upperbound + 1) * squareLen);
 
-        this.drawScore(g);
+        this.drawScore(g, leftbound, upperbound);
 
-        this.drawBoard(g, startMainArea);
+        this.drawBoard(g, mainArea, leftbound, upperbound);
 
-        this.drawShape(g, startMainArea, board.getCurrentShape());
+        this.drawShape(g, mainArea, board.getCurrentShape());
 
-        this.drawShape(g, startRightArea, board.getNextShape());
+        this.drawShape(g, rightArea, board.getNextShape());
 
         this.drawPause(g);
 
-        this.drawQuit(g);
+        this.drawQuit(g, leftbound, upperbound);
 
         this.repaint();
     }
@@ -78,23 +85,34 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
         }
     }
 
-    private void drawBoard(Graphics g, Point origin) {
+    private void drawBoard(Graphics g, Point origin, int leftbound, int upperbound) {
 
-        g.drawRect(16 * squareLen, 5 * squareLen, 10 * squareLen, 20 * squareLen);
-        g.drawRect(27 * squareLen, 5 * squareLen, 6 * squareLen, 4 * squareLen);
+        g.drawRect(leftbound * squareLen, upperbound * squareLen, (board.w - 2) * squareLen, (board.h - 1) * squareLen);
+        g.drawRect((leftbound + board.w) * squareLen, upperbound * squareLen, 6 * squareLen, 4 * squareLen);
 
-        for (int i = 0; i < 21; i++) {
-            for (int j = 0; j < 12; j++) {
-                if (board.area[i][j] == 0 || board.area[i][j] == Integer.MAX_VALUE)
+//        for (int i = 0; i < board.h; i++) {
+//            for (int j = 0; j < board.w; j++) {
+//                if (board.area[i][j] == 0 || board.area[i][j] == Integer.MAX_VALUE)
+//                    continue;
+//                this.drawRect(g, origin, j, i, getColor(Shape.ShapeType.values()[board.area[i][j]]));
+//            }
+//        }
+
+        int i = 0;
+        for (int[] line : board.area) {
+            for (int j = 0; j < board.w; j++) {
+                if (line[j] == 0 || line[j] == Integer.MAX_VALUE)
                     continue;
-                this.drawRect(g, origin, j, i, getColor(Shape.ShapeType.values()[board.area[i][j]]));
+                this.drawRect(g, origin, j, i,
+                        board.over ? Color.getColor("Grey") : getColor(Shape.ShapeType.values()[line[j]]));
             }
+            i++;
         }
     }
 
-    private void drawQuit(Graphics g) {
+    private void drawQuit(Graphics g, int leftbound, int upperbound) {
         // Add quit button.
-        this.quitPosition = new Point(27 * squareLen, 24 * squareLen);
+        this.quitPosition = new Point((leftbound + board.w) * squareLen, (upperbound + board.h - 2) * squareLen);
         QuitButton.QuitButton(g, quitPosition, squareLen);
     }
 
@@ -107,23 +125,23 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
         }
     }
 
-    private void drawScore(Graphics g) {
+    private void drawScore(Graphics g, int leftbound, int upperbound) {
         // Add text.
         AddText text = new AddText();
         // Level information.
-        Point levelPosition = new Point(27 * squareLen, 14 * squareLen);
+        Point levelPosition = new Point((leftbound + board.w) * squareLen, (upperbound + 8) * squareLen);
         text.setString(g, "Level:", levelPosition, squareLen);
-        text.setValue(g, 1, levelPosition, squareLen);
+        text.setValue(g, board.level, levelPosition, squareLen);
 
         // Lines information.
-        Point linesPosition = new Point(27 * squareLen, 16 * squareLen);
+        Point linesPosition = new Point((leftbound + board.w) * squareLen, (upperbound + 10) * squareLen);
         text.setString(g, "Lines:", linesPosition, squareLen);
-        text.setValue(g, 0, linesPosition, squareLen);
+        text.setValue(g, board.line, linesPosition, squareLen);
 
         // Scores information.
-        Point scoresPosition = new Point(27 * squareLen, 18 * squareLen);
+        Point scoresPosition = new Point((leftbound + board.w) * squareLen, (upperbound + 12) * squareLen);
         text.setString(g, "Score:", scoresPosition, squareLen);
-        text.setValue(g, 0, scoresPosition, squareLen);
+        text.setValue(g, board.score, scoresPosition, squareLen);
     }
 
     private void drawRect(Graphics g, Point origin, int x, int y, Color color) {
@@ -141,8 +159,11 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
     @Override
     public void mouseMoved(MouseEvent e) {
         int x = e.getX(), y = e.getY();
-        boolean MouseInMainArea = x >= startMainArea.getX() + squareLen && x <= startMainArea.getX() + squareLen + 10 * squareLen &&
-                y >= startMainArea.getY() && y <= startMainArea.getY() + 20 * squareLen;
+        boolean MouseInMainArea =
+                x >= mainArea.getX() + squareLen &&
+                        x <= mainArea.getX() + squareLen + (board.w + 1) * squareLen &&
+                        y >= mainArea.getY() &&
+                        y <= mainArea.getY() + (board.h - 1) * squareLen;
 
         if (pause != MouseInMainArea) {
             pause = MouseInMainArea;
@@ -165,8 +186,8 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
                     y >= quitPosition.getY() && y <= quitPosition.getY() + squareLen * 3 / 2) {
                 System.exit(0);
             }
-            if (x < startMainArea.getX() || x > startMainArea.getX() + 10 * squareLen ||
-                    y < startMainArea.getY() || y > startMainArea.getY() + 20 * squareLen) {
+            if (x < mainArea.getX() || x > mainArea.getX() + 10 * squareLen ||
+                    y < mainArea.getY() || y > mainArea.getY() + 20 * squareLen) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     this.board.moveLeft();
 

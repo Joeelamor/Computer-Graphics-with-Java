@@ -1,14 +1,175 @@
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-public abstract class Shape {
+public class Shape {
 
     public enum ShapeType {
         NULL, I, J, L, S, T, Z, C
     }
 
-    static class Coordinate {
+    static final Coordinate[] bases = new Coordinate[]{
+            new Coordinate(-1, -1),
+            // Shape I
+            new Coordinate(1, -1),
+            // Shape J
+            new Coordinate(1, 0),
+            // Shape L
+            new Coordinate(1, 0),
+            // Shape S
+            new Coordinate(1, -1),
+            // Shape T
+            new Coordinate(1, 0),
+            // Shape Z
+            new Coordinate(1, -1),
+            // Shape Cu
+            new Coordinate(1, -1)
+    };
+    static final List<List<List<Coordinate>>> shapes = Collections.unmodifiableList(Arrays.asList(
+            Collections.emptyList(),
+
+            // Shape I
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1),
+                            new Coordinate(3, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2),
+                            new Coordinate(1, 3)
+                    )
+            ),
+
+            // Shape J
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(0, 0),
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(2, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1),
+                            new Coordinate(2, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2),
+                            new Coordinate(0, 2)
+                    )
+            ),
+
+            // Shape L
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1),
+                            new Coordinate(2, 0)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2),
+                            new Coordinate(2, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(0, 2),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 0),
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2)
+                    )
+            ),
+
+            // Shape S
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1),
+                            new Coordinate(0, 2),
+                            new Coordinate(1, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 0),
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2)
+                    )
+            ),
+
+            // Shape T
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1),
+                            new Coordinate(1, 0)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2),
+                            new Coordinate(2, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1),
+                            new Coordinate(1, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2),
+                            new Coordinate(0, 1)
+                    )
+            ),
+
+            // Shape Z
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2),
+                            new Coordinate(2, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(2, 0),
+                            new Coordinate(2, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2)
+                    )
+            ),
+
+            // Shape Cu
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2),
+                            new Coordinate(2, 1),
+                            new Coordinate(2, 2)
+                    )
+            )
+    ));
+
+    final static class Coordinate {
         int x;
         int y;
 
@@ -30,58 +191,37 @@ public abstract class Shape {
     Coordinate base;
     List<List<Coordinate>> coordinates;
 
-    public Shape() {
-    }
-
-    public Shape(Coordinate base) {
-        this.status = 0;
-        this.base = base;
-    }
-
-    public Shape(ShapeType type, Coordinate base) {
+    public Shape(ShapeType type) {
         this.type = type;
-        this.base = base;
+        this.base = bases[type.ordinal()];
+        this.coordinates = Shape.shapes.get(type.ordinal());
     }
 
-    static Shape shapeOf(ShapeType type, Coordinate base, int status) {
-        switch (type) {
-            case C:
-                return new ShapeC(base, status);
-            case I:
-                return new ShapeI(base, status);
-            case J:
-                return new ShapeJ(base, status);
-            case L:
-                return new ShapeL(base, status);
-            case S:
-                return new ShapeS(base, status);
-            case T:
-                return new ShapeT(base, status);
-            case Z:
-                return new ShapeZ(base, status);
-        }
-        return new ShapeC(base, status);
+    private Shape(Shape shape, Coordinate coordinate) {
+        this.type = shape.type;
+        this.status = shape.status;
+        this.base = coordinate;
+        this.coordinates = Shape.shapes.get(type.ordinal());
+    }
+
+    private Shape(Shape shape, int status) {
+        this.type = shape.type;
+        this.status = status;
+        this.base = shape.base;
+        this.coordinates = Shape.shapes.get(type.ordinal());
+    }
+
+    static Shape shapeOf(Shape shape, Coordinate base) {
+        return new Shape(shape, base);
+    }
+
+    static Shape shapeOf(Shape shape, int status) {
+        return new Shape(shape, status);
     }
 
     public static Shape getRandomShape() {
         Random random = new Random();
-        switch (random.nextInt(7)) {
-            case 0:
-                return (new ShapeC());
-            case 1:
-                return (new ShapeI());
-            case 2:
-                return (new ShapeJ());
-            case 3:
-                return (new ShapeL());
-            case 4:
-                return (new ShapeZ());
-            case 5:
-                return (new ShapeS());
-            case 6:
-                return (new ShapeT());
-        }
-        return null;
+        return new Shape(ShapeType.values()[random.nextInt(7) + 1]);
     }
 
     public ShapeType getType() {
@@ -100,16 +240,16 @@ public abstract class Shape {
 
 
     public Shape moveLeft() {
-        return Shape.shapeOf(this.type, new Coordinate(this.base.x - 1, this.base.y), this.status);
+        return Shape.shapeOf(this, new Coordinate(this.base.x - 1, this.base.y));
     }
 
     public Shape moveRight() {
-        return Shape.shapeOf(this.type, new Coordinate(this.base.x + 1, this.base.y), this.status);
+        return Shape.shapeOf(this, new Coordinate(this.base.x + 1, this.base.y));
     }
 
     public Shape rotateClockwise() {
         int status = (this.status + 1) % this.coordinates.size();
-        return Shape.shapeOf(this.type, base, status);
+        return Shape.shapeOf(this, status);
     }
 
     public Shape rotateCounterClockwise() {
@@ -117,11 +257,11 @@ public abstract class Shape {
         int status = (this.status - 1);
         if (status < 0)
             status = this.coordinates.size() - 1;
-        return Shape.shapeOf(this.type, base, status);
+        return Shape.shapeOf(this, status);
     }
 
     public Shape moveDown() {
-        return Shape.shapeOf(this.type, new Coordinate(this.base.x, this.base.y + 1), this.status);
+        return Shape.shapeOf(this, new Coordinate(this.base.x, this.base.y + 1));
     }
 
     @Override
