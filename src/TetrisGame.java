@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -6,9 +7,45 @@ import java.util.Arrays;
 public class TetrisGame extends Frame {
 
     static TetrisGame g;
+    static Board b;
 
     public static void main(String[] args) {
         initialize();
+        while (true) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                System.exit(0);
+            }
+            if (b != null && b.over) {
+                break;
+            }
+        }
+        Frame f = new Frame("Game Over");
+        f.setLayout(null);
+        f.setBounds(550, 300, 400, 200);
+
+        Dimension df = f.getSize();
+
+        int intercept = df.height / 12;
+        int left = df.width / 5;
+
+        Label score = new Label("Score: " + b.score, Label.CENTER);
+        score.setBounds(left, 2 * intercept, 3 * left, 2 * intercept);
+        Label level = new Label("Level: " + b.level, Label.CENTER);
+        level.setBounds(left, 5 * intercept, 3 * left, 2 * intercept);
+        Label line = new Label("Line: " + b.line, Label.CENTER);
+        line.setBounds(left, 8 * intercept, 3 * left, 2 * intercept);
+        Button quit = new Button("Quit");
+        quit.setBounds(2 * left, (int)(10.5 * intercept), left, intercept);
+        quit.addActionListener(e -> System.exit(0));
+
+        f.add(score);
+        f.add(level);
+        f.add(line);
+        f.add(quit);
+
+        f.setVisible(true);
     }
 
     TetrisGame(int speed, int rol, int score, int w, int h) {
@@ -19,22 +56,24 @@ public class TetrisGame extends Frame {
             }
         });
         setSize(1500, 900);
-        add("Center", new MainArea(new Board(speed, rol, score, w, h)));
+        b = new Board(speed, rol, score, w, h);
+        add("Center", new MainArea(b));
         setVisible(true);
+
+
     }
 
     public static void initialize() {
         Frame f = new Frame("Specifying game parameters.");
-//        f.setSize(800, 400);
         f.setLayout(null);
 
         int[] defaultValues = new int[]{1, 20, 1, 10, 20};
 
         Scrollbar[] scrollbars = new Scrollbar[]{
                 // s[0] => speed factor (range: 0.1-1.0).
-                new Scrollbar(Scrollbar.HORIZONTAL, 1, 1, 1, 11),
+                new Scrollbar(Scrollbar.HORIZONTAL, 1, 1, 1, 21),
                 // s[1] => number of rows required for each Level of difficulty (range: 20-50).
-                new Scrollbar(Scrollbar.HORIZONTAL, 1, 1, 1, 51),
+                new Scrollbar(Scrollbar.HORIZONTAL, 1, 1, 20, 51),
                 // s[2] => scoring factor (range: 1-10).
                 new Scrollbar(Scrollbar.HORIZONTAL, 1, 1, 1, 11),
                 // s[3] => width of the play board (range 10 - 20)
@@ -77,7 +116,7 @@ public class TetrisGame extends Frame {
             f.add(values[i]);
         }
 
-        f.setBounds(500, 500, intercept * 4 + labelWidth + scrollbarWidth + valueWidth, height * 8);
+        f.setBounds(500, 350, intercept * 4 + labelWidth + scrollbarWidth + valueWidth, height * 8);
 
         Button b = new Button("OK");
         b.setBounds(20, height * 7, 80, 30);

@@ -3,7 +3,7 @@ import java.util.*;
 public class Shape {
 
     public enum ShapeType {
-        NULL, I, J, L, S, T, Z, C
+        NULL, I, J, L, S, T, Z, C, x1, x2, x3, x4, x5, x6, x7, x8
     }
 
     static final Coordinate[] bases = new Coordinate[]{
@@ -21,7 +21,24 @@ public class Shape {
             // Shape Z
             new Coordinate(1, -1),
             // Shape Cu
-            new Coordinate(1, -1)
+            new Coordinate(1, -1),
+
+            // X1
+            new Coordinate(2, 0),
+            // X2
+            new Coordinate(1, 0),
+            // X3
+            new Coordinate(1, -1),
+            // X4
+            new Coordinate(2, 0),
+            // X5
+            new Coordinate(1, 0),
+            // X6
+            new Coordinate(2, 0),
+            // X7
+            new Coordinate(2,0),
+            // X8
+            new Coordinate(1, 0)
     };
     static final List<List<List<Coordinate>>> shapes = Collections.unmodifiableList(Arrays.asList(
             Collections.emptyList(),
@@ -166,6 +183,146 @@ public class Shape {
                             new Coordinate(2, 1),
                             new Coordinate(2, 2)
                     )
+            ),
+
+            // X1
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(2, 1),
+                            new Coordinate(1, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(2, 1),
+                            new Coordinate(1, 2),
+                            new Coordinate(1, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 2),
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1)
+                    )
+            ),
+
+            // X2
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(0, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1)
+                    ),
+                    Arrays.asList(
+//                            new Coordinate(1, 0),
+                            new Coordinate(2, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+//                            new Coordinate(2, 1),
+                            new Coordinate(2, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1),
+//                            new Coordinate(1, 2),
+                            new Coordinate(0, 2)
+                    )
+            ),
+
+            // x3
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1),
+                            new Coordinate(1, 2)
+                    )
+            ),
+            // x4
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(0, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 0),
+                            new Coordinate(1, 1)
+                    )
+            ),
+            // X5
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(2, 1),
+                            new Coordinate(1, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 2),
+                            new Coordinate(1, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(1, 1)
+                    )
+            ),
+
+            // X6
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(2, 1),
+                            new Coordinate(1, 0)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 2),
+                            new Coordinate(2, 1)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(0, 1),
+                            new Coordinate(2, 1),
+                            new Coordinate(1, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 0),
+                            new Coordinate(1, 2),
+                            new Coordinate(0, 1)
+                    )
+            ),
+
+            // X7
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(1, 1)
+                    )
+            ),
+
+            // X8
+            Arrays.asList(
+                    Arrays.asList(
+                            new Coordinate(1, 1),
+                            new Coordinate(2, 0),
+                            new Coordinate(0, 2)
+                    ),
+                    Arrays.asList(
+                            new Coordinate(1, 1),
+                            new Coordinate(0, 0),
+                            new Coordinate(2, 2)
+                    )
             )
     ));
 
@@ -221,7 +378,7 @@ public class Shape {
 
     public static Shape getRandomShape() {
         Random random = new Random();
-        return new Shape(ShapeType.values()[random.nextInt(7) + 1]);
+        return new Shape(ShapeType.values()[random.nextInt(15) + 1]);
     }
 
     public ShapeType getType() {
@@ -230,12 +387,15 @@ public class Shape {
 
     public List<Coordinate> getShape() {
 //        return shape;
-        return Arrays.asList(
-                new Coordinate(this.base.x + this.coordinates.get(status).get(0).x, this.base.y + this.coordinates.get(status).get(0).y),
-                new Coordinate(this.base.x + this.coordinates.get(status).get(1).x, this.base.y + this.coordinates.get(status).get(1).y),
-                new Coordinate(this.base.x + this.coordinates.get(status).get(2).x, this.base.y + this.coordinates.get(status).get(2).y),
-                new Coordinate(this.base.x + this.coordinates.get(status).get(3).x, this.base.y + this.coordinates.get(status).get(3).y)
-        );
+//        return Arrays.asList(
+//                new Coordinate(this.base.x + this.coordinates.get(status).get(0).x, this.base.y + this.coordinates.get(status).get(0).y),
+//                new Coordinate(this.base.x + this.coordinates.get(status).get(1).x, this.base.y + this.coordinates.get(status).get(1).y),
+//                new Coordinate(this.base.x + this.coordinates.get(status).get(2).x, this.base.y + this.coordinates.get(status).get(2).y),
+//                new Coordinate(this.base.x + this.coordinates.get(status).get(3).x, this.base.y + this.coordinates.get(status).get(3).y)
+//        );
+        List<Coordinate> ret = new ArrayList<>();
+        this.coordinates.get(status).forEach(c -> ret.add(new Coordinate(this.base.x + c.x, this.base.y + c.y)));
+        return ret;
     }
 
 
