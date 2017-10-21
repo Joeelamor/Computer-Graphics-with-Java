@@ -3,11 +3,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class TetrisGame extends Frame {
 
     static TetrisGame g;
     static Board b;
+    static Checkbox[] checkboxes = new Checkbox[10];
 
     public static void main(String[] args) {
         initialize();
@@ -37,7 +41,7 @@ public class TetrisGame extends Frame {
         Label line = new Label("Line: " + b.line, Label.CENTER);
         line.setBounds(left, 8 * intercept, 3 * left, 2 * intercept);
         Button quit = new Button("Quit");
-        quit.setBounds(2 * left, (int)(10.5 * intercept), left, intercept);
+        quit.setBounds(2 * left, (int) (10.5 * intercept), left, intercept);
         quit.addActionListener(e -> System.exit(0));
 
         f.add(score);
@@ -48,7 +52,7 @@ public class TetrisGame extends Frame {
         f.setVisible(true);
     }
 
-    TetrisGame(int speed, int rol, int score, int w, int h) {
+    TetrisGame(int speed, int rol, int score, int w, int h, Set set) {
         super("Tetris Game");
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -56,7 +60,7 @@ public class TetrisGame extends Frame {
             }
         });
         setSize(1500, 900);
-        b = new Board(speed, rol, score, w, h);
+        b = new Board(speed, rol, score, w, h, set);
         add("Center", new MainArea(b));
         setVisible(true);
 
@@ -64,8 +68,14 @@ public class TetrisGame extends Frame {
     }
 
     public static void initialize() {
-        Frame f = new Frame("Specifying game parameters.");
-        f.setLayout(null);
+        Frame f = new Frame("Start Tetris Game.");
+        f.setLayout(new BorderLayout());
+
+        Panel center = new Panel();
+        center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
+
+        Panel parameters = new Panel();
+        parameters.setLayout(new BoxLayout(parameters, BoxLayout.Y_AXIS));
 
         int[] defaultValues = new int[]{1, 20, 1, 10, 20};
 
@@ -83,11 +93,11 @@ public class TetrisGame extends Frame {
         };
 
         Label[] labels = new Label[]{
-                new Label("Speed Factor", Label.LEFT),
+                new Label("Speed Factor      ", Label.LEFT),
                 new Label("Rows in each Level", Label.LEFT),
-                new Label("Scoring Factor", Label.LEFT),
-                new Label("Width of Board", Label.LEFT),
-                new Label("Height of Board", Label.LEFT),
+                new Label("Scoring Factor    ", Label.LEFT),
+                new Label("Width of Board    ", Label.LEFT),
+                new Label("Height of Board   ", Label.LEFT),
         };
 
         Label[] values = new Label[]{
@@ -102,28 +112,38 @@ public class TetrisGame extends Frame {
         int scrollbarWidth = 400;
         int valueWidth = 100;
         int intercept = 20;
-        int height = 40;
+        int height = 30;
+        Font tt = new Font("Monospaced", Font.PLAIN, 12);
         for (int i = 0; i < scrollbars.length; i++) {
-            int y = height * (i + 1);
+            int y = 0;
             final int index = i;
-            labels[i].setBounds(intercept, y, labelWidth, height / 2);
-            scrollbars[i].setBounds(intercept * 2 + labelWidth, y, scrollbarWidth, height / 2);
-            values[i].setBounds(intercept * 3 + labelWidth + scrollbarWidth, y, valueWidth, height / 2);
-            values[i].setText("" + scrollbars[i].getValue());
-            scrollbars[i].addAdjustmentListener(e -> values[index].setText("" + scrollbars[index].getValue()));
-            f.add(labels[i]);
-            f.add(scrollbars[i]);
-            f.add(values[i]);
+            labels[i].setFont(tt);
+//            labels[i].setBounds(intercept, y, labelWidth, height / 2);
+//            scrollbars[i].setBounds(intercept * 2 + labelWidth, y, scrollbarWidth, height / 2);
+            scrollbars[i].setSize(2000, 10);
+            values[i].setFont(tt);
+//            values[i].setBounds(intercept * 3 + labelWidth + scrollbarWidth, y, valueWidth, height / 2);
+            values[i].setText((scrollbars[index].getValue() < 10 ? " " : "") + scrollbars[i].getValue());
+//            values[i].setSize( valueWidth, height / 2);
+            scrollbars[i].addAdjustmentListener(e -> values[index].setText((scrollbars[index].getValue() < 10 ? " " : "") + scrollbars[index].getValue()));
+            Panel t = new Panel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+//            Panel t = new Panel(null);
+            t.add(labels[i], BorderLayout.WEST);
+            t.add(scrollbars[i], BorderLayout.CENTER);
+            t.add(values[i], BorderLayout.EAST);
+            parameters.add(t);
         }
 
-        f.setBounds(500, 350, intercept * 4 + labelWidth + scrollbarWidth + valueWidth, height * 8);
+        f.setBounds(500, 350, intercept * 4 + labelWidth + scrollbarWidth + valueWidth, height * 16);
 
+
+        Panel bottom = new Panel(new FlowLayout());
         Button b = new Button("OK");
-        b.setBounds(20, height * 7, 80, 30);
+//        b.setBounds(20, height * 15, 80, 30);
         Button d = new Button("Reset");
-        d.setBounds(120, height * 7, 80, 30);
+//        d.setBounds(120, height * 15, 80, 30);
         Button q = new Button("Quit");
-        q.setBounds(220, height * 7, 80, 30);
+//        q.setBounds(220, height * 15, 80, 30);
 
         d.addActionListener(e -> {
             for (int i = 0; i < scrollbars.length; i++) {
@@ -138,15 +158,68 @@ public class TetrisGame extends Frame {
             int score = scrollbars[2].getValue();
             int w = scrollbars[3].getValue();
             int h = scrollbars[4].getValue();
-            g = new TetrisGame(speed, rol, score, w, h);
+
+            Set<Integer> set = new HashSet<>();
+
+            for (int i = 0; i < 8; i++) {
+                if (!checkboxes[i].getState())
+                    set.add(i + 8);
+            }
+
+            g = new TetrisGame(speed, rol, score, w, h, set);
             f.dispose();
         });
 
         q.addActionListener(e -> System.exit(0));
 
-        f.add(b);
-        f.add(d);
-        f.add(q);
+        bottom.add(b);
+        bottom.add(d);
+        bottom.add(q);
+
+
+        Panel x = new Panel(new GridLayout(2, 8));
+        for (int i = 8; i <= 15; i++) {
+            Extension ext = new Extension(new Shape(Shape.ShapeType.values()[i]), 15, 80, 46);
+            Panel tp = new Panel();
+            tp.add(ext);
+            x.add(tp);
+        }
+
+
+        for (int i = 0; i < 8; i++) {
+            checkboxes[i] = new Checkbox();
+            Panel tp = new Panel();
+            tp.add(checkboxes[i]);
+            x.add(tp);
+        }
+
+        Label pc = new Label("Specifying game parameters", Label.CENTER);
+        pc.setFont(tt);
+        center.add(pc);
+
+        center.add(new Label());
+
+        center.add(parameters);
+
+        center.add(new Label());
+        center.add(new Label());
+        center.add(new Label());
+
+        Label c = new Label("Choose extended version of Shapes", Label.CENTER);
+        c.setFont(tt);
+        center.add(c);
+
+        center.add(new Label());
+
+        center.add(x);
+
+        center.add(new Label());
+
+        f.add(center, BorderLayout.CENTER);
+        f.add(bottom, BorderLayout.SOUTH);
+        f.add(new Label(), BorderLayout.NORTH);
+        f.add(new Panel(), BorderLayout.EAST);
+        f.add(new Panel(), BorderLayout.WEST);
         f.setVisible(true);
     }
 }

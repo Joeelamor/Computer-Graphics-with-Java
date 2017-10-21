@@ -23,8 +23,9 @@ public class Board implements Runnable {
     final int rol;
     int score = 0;
     int speed;
+    static Set set;
 
-    public Board(int speed, int rol, int scoreFactor, int w, int h) {
+    public Board(int speed, int rol, int scoreFactor, int w, int h, Set set) {
         this.w = w + 2;
         this.h = h + 1;
         this.rol = rol;
@@ -33,6 +34,7 @@ public class Board implements Runnable {
 //        this.area = new int[h + 1][w + 2];
         this.area = new LinkedList<>();
         this.queue = new LinkedList<>();
+        this.set = set;
         this.getRandomShape();
         initialize();
     }

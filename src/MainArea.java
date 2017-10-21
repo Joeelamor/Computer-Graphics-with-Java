@@ -130,7 +130,7 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
     private void drawPause(Graphics g) {
         // Add pause information.
         if (pause) {
-            Point pausePosition = new Point(mainArea.x + ((board.w - 6) / 2) * squareLen, mainArea.y + (board.h - 3) / 2* squareLen);
+            Point pausePosition = new Point(mainArea.x + ((board.w - 6) / 2) * squareLen, mainArea.y + (board.h - 3) / 2 * squareLen);
             AddPause pause = new AddPause();
             pause.add(g, pausePosition, squareLen);
         }
@@ -162,7 +162,7 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
         g.drawRect(origin.x + x * squareLen, origin.y + y * squareLen, squareLen, squareLen);
     }
 
-    private Color getColor(Shape.ShapeType color) {
+    static Color getColor(Shape.ShapeType color) {
         return MainArea.palette.get(color.ordinal());
     }
 
@@ -238,18 +238,20 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (!pause) {
-            if (!e.isConsumed()) {
-                int num = e.getUnitsToScroll();
-
-                if (num > 0)
-                    for (int i = 0; i < num; i++)
-                        this.board.rotateClockwise();
-                else
-                    for (int i = 0; i < Math.abs(num); i++)
-                        this.board.rotateCounterClockwise();
-                e.consume();
-            }
+        if (pause) {
+            e.consume();
         }
+        if (!e.isConsumed()) {
+            int num = e.getUnitsToScroll();
+
+            if (num > 0)
+                for (int i = 0; i < num; i++)
+                    this.board.rotateClockwise();
+            else
+                for (int i = 0; i < Math.abs(num); i++)
+                    this.board.rotateCounterClockwise();
+            e.consume();
+        }
+
     }
 }

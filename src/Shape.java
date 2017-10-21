@@ -378,7 +378,10 @@ public class Shape {
 
     public static Shape getRandomShape() {
         Random random = new Random();
-        return new Shape(ShapeType.values()[random.nextInt(15) + 1]);
+        int x = random.nextInt(15) + 1;
+        while (Board.set.contains(x))
+            x = random.nextInt(15) + 1;
+        return new Shape(ShapeType.values()[x]);
     }
 
     public ShapeType getType() {
