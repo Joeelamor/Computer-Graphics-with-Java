@@ -238,16 +238,18 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (!e.isConsumed()) {
-            int num = e.getUnitsToScroll();
+        if (!pause) {
+            if (!e.isConsumed()) {
+                int num = e.getUnitsToScroll();
 
-            if (num > 0)
-                for (int i = 0; i < num; i++)
-                    this.board.rotateClockwise();
-            else
-                for (int i = 0; i < Math.abs(num); i++)
-                    this.board.rotateCounterClockwise();
-            e.consume();
+                if (num > 0)
+                    for (int i = 0; i < num; i++)
+                        this.board.rotateClockwise();
+                else
+                    for (int i = 0; i < Math.abs(num); i++)
+                        this.board.rotateCounterClockwise();
+                e.consume();
+            }
         }
     }
 }
