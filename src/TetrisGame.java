@@ -1,11 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class TetrisGame extends Frame {
 
@@ -118,16 +116,11 @@ public class TetrisGame extends Frame {
             int y = 0;
             final int index = i;
             labels[i].setFont(tt);
-//            labels[i].setBounds(intercept, y, labelWidth, height / 2);
-//            scrollbars[i].setBounds(intercept * 2 + labelWidth, y, scrollbarWidth, height / 2);
             scrollbars[i].setSize(2000, 10);
             values[i].setFont(tt);
-//            values[i].setBounds(intercept * 3 + labelWidth + scrollbarWidth, y, valueWidth, height / 2);
             values[i].setText((scrollbars[index].getValue() < 10 ? " " : "") + scrollbars[i].getValue());
-//            values[i].setSize( valueWidth, height / 2);
             scrollbars[i].addAdjustmentListener(e -> values[index].setText((scrollbars[index].getValue() < 10 ? " " : "") + scrollbars[index].getValue()));
             Panel t = new Panel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-//            Panel t = new Panel(null);
             t.add(labels[i], BorderLayout.WEST);
             t.add(scrollbars[i], BorderLayout.CENTER);
             t.add(values[i], BorderLayout.EAST);
@@ -139,11 +132,8 @@ public class TetrisGame extends Frame {
 
         Panel bottom = new Panel(new FlowLayout());
         Button b = new Button("OK");
-//        b.setBounds(20, height * 15, 80, 30);
         Button d = new Button("Reset");
-//        d.setBounds(120, height * 15, 80, 30);
         Button q = new Button("Quit");
-//        q.setBounds(220, height * 15, 80, 30);
 
         d.addActionListener(e -> {
             for (int i = 0; i < scrollbars.length; i++) {

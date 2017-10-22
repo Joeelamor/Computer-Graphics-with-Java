@@ -1,5 +1,7 @@
-
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
 public class Board implements Runnable {
 
@@ -13,7 +15,6 @@ public class Board implements Runnable {
 
     int w;
     int h;
-    //    int[][] area;
     LinkedList<int[]> area;
 
     int level = 1;
@@ -31,10 +32,9 @@ public class Board implements Runnable {
         this.rol = rol;
         this.speed = speed;
         this.scoreFactor = scoreFactor;
-//        this.area = new int[h + 1][w + 2];
         this.area = new LinkedList<>();
         this.queue = new LinkedList<>();
-        this.set = set;
+        Board.set = set;
         this.getRandomShape();
         initialize();
     }
@@ -246,5 +246,8 @@ public class Board implements Runnable {
             nextDiff = poll();
 
         currentShape = Shape.shapeOf(nextDiff, currentShape.base);
+        this.score = this.score - this.level * this.scoreFactor;
+        if (this.score <= 0)
+            this.score = 0;
     }
 }

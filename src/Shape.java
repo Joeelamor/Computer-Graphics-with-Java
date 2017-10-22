@@ -389,13 +389,6 @@ public class Shape {
     }
 
     public List<Coordinate> getShape() {
-//        return shape;
-//        return Arrays.asList(
-//                new Coordinate(this.base.x + this.coordinates.get(status).get(0).x, this.base.y + this.coordinates.get(status).get(0).y),
-//                new Coordinate(this.base.x + this.coordinates.get(status).get(1).x, this.base.y + this.coordinates.get(status).get(1).y),
-//                new Coordinate(this.base.x + this.coordinates.get(status).get(2).x, this.base.y + this.coordinates.get(status).get(2).y),
-//                new Coordinate(this.base.x + this.coordinates.get(status).get(3).x, this.base.y + this.coordinates.get(status).get(3).y)
-//        );
         List<Coordinate> ret = new ArrayList<>();
         this.coordinates.get(status).forEach(c -> ret.add(new Coordinate(this.base.x + c.x, this.base.y + c.y)));
         return ret;

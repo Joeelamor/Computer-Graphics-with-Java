@@ -38,6 +38,7 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
     private Point quitPosition;
     private int squareLen;
     private boolean pause = false;
+    private boolean cheat = false;
 
     private Board board;
     private Point rightArea;
@@ -59,7 +60,6 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
 
         Dimension d = getSize();
         int maxX = d.width - 1, maxY = d.height - 1;
-//        squareLen = Math.min(maxX / (board.w * 2), maxY / (board.h * 3 / 2));
 
         squareLen = Math.min(d.width / (board.w + 10), d.height / (board.h + 9));
 
@@ -89,7 +89,7 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
 
     private void drawShape(Graphics g, Point origin, Shape shape) {
 
-        Color color = board.over ? Color.GRAY : this.getColor(shape.getType());
+        Color color = board.over ? Color.GRAY : getColor(shape.getType());
 
         for (Shape.Coordinate cube : shape.getShape()) {
             this.drawRect(g, origin, cube.x, cube.y, color);
@@ -100,14 +100,6 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
 
         g.drawRect(leftbound * squareLen, upperbound * squareLen, (board.w - 2) * squareLen, (board.h - 1) * squareLen);
         g.drawRect((leftbound + board.w) * squareLen, upperbound * squareLen, 6 * squareLen, 4 * squareLen);
-
-//        for (int i = 0; i < board.h; i++) {
-//            for (int j = 0; j < board.w; j++) {
-//                if (board.area[i][j] == 0 || board.area[i][j] == Integer.MAX_VALUE)
-//                    continue;
-//                this.drawRect(g, origin, j, i, getColor(Shape.ShapeType.values()[board.area[i][j]]));
-//            }
-//        }
 
         int i = 0;
         for (int[] line : board.area) {
@@ -166,6 +158,25 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
         return MainArea.palette.get(color.ordinal());
     }
 
+    public boolean isInsideShape(Point test, List<Shape.Coordinate> coordinates) {
+        int i;
+        int j;
+        boolean result = false;
+        for (Shape.Coordinate c : coordinates) {
+            Point[] ps = new Point[4];
+            ps[0] = new Point(c.x * squareLen + mainArea.x, c.y * squareLen + mainArea.y);
+            ps[1] = new Point((c.x + 1) * squareLen + mainArea.x, c.y * squareLen + mainArea.y);
+            ps[2] = new Point(c.x * squareLen + mainArea.x, (c.y + 1) * squareLen + mainArea.y);
+            ps[3] = new Point((c.x + 1) * squareLen + mainArea.x, (c.y + 1) * squareLen + mainArea.y);
+            for (i = 0, j = ps.length - 1; i < ps.length; j = i++) {
+                if ((ps[i].y > test.y) != (ps[j].y > test.y) &&
+                        (test.x < (ps[j].x - ps[i].x) * (test.y - ps[i].y) / (ps[j].y - ps[i].y) + ps[i].x)) {
+                    result = !result;
+                }
+            }
+        }
+        return result;
+    }
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -182,8 +193,19 @@ public class MainArea extends Canvas implements MouseMotionListener, MouseListen
             pause = MouseInMainArea;
             if (pause)
                 this.board.pause();
-            else
+            else {
                 this.board.resume();
+                cheat = false;
+            }
+        }
+
+        if (cheat)
+            return;
+
+        boolean isCheated = this.isInsideShape(e.getPoint(), this.board.currentShape.getShape());
+        if (isCheated) {
+            board.cheat();
+            cheat = true;
         }
         this.repaint();
     }
