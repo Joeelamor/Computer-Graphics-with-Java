@@ -4,7 +4,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * If the cursor is inside the falling shape F (in PAUSE mode), F will be changed to one of the shapes
+ * different from F and that currently inside “Next shape”, Score = Score - Level  x M. And the shape will
+ * only be changed one time during a pause time.
+ */
 public class MainArea extends Canvas implements MouseMotionListener, MouseListener, MouseWheelListener {
 
     private static List<Color> palette = Collections.unmodifiableList(Arrays.asList(

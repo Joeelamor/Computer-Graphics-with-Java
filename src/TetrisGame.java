@@ -5,6 +5,11 @@ import java.awt.event.WindowEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The GUI will provide 5 slides for speed factor, rows in each line, soring factor,
+ * with of board and height of board selection. The Gui will also provide other 8
+ * extended versions of shapes. Player can choose any shape to add in their games.
+ */
 public class TetrisGame extends Frame {
 
     static TetrisGame g;
