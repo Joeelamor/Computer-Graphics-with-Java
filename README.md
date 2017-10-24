@@ -35,14 +35,15 @@ update is based on all previous works.
 
 -   When any horizontal row of squares R has no hole, i.e. all the squares in R
     are parts of some shapes with colors, R is removed and all the rows above R
-    move one square down, Lines = Lines + 1; Score = Score + Level x M. 
--   If the number of removed rows in the current Level reaches N, Level = Level + 1, the falling speed FS = FS x (1 + Level  x S).
+    move one square down, `Lines = Lines + 1`; `Score = Score + Level x M`. 
+-   If the number of removed rows in the current Level reaches N, `Level = Level + 1`, 
+    the falling speed `FS = FS x (1 + Level  x S)`.
 -   When a new shape has no space to fall, i.e. existing shapes in “Main area”
     pile up to near the top, the game terminates.
 -   If the cursor is inside the falling shape F (in PAUSE mode), F will be
     changed to one of the shapes different from F and that currently inside
-    “Next shape”, Score = Score - Level  x M. You should use
-    “Point-Inside-Polygon” test algorithm to detect the cursor.
+    _Next shape_, `Score = Score - Level  x M`. You should use
+    _Point-Inside-Polygon_ test algorithm to detect the cursor.
 -   Create a user-friendly interface so that various parameters could be
     adjusted, using GUI widgets of your choice (e.g. a slider for M), to suit
     different user groups:
