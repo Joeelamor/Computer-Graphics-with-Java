@@ -45,7 +45,7 @@ update is based on all previous works.
     _Next shape_, `Score = Score - Level  x M`. You should use
     _Point-Inside-Polygon_ test algorithm to detect the cursor.
 -   Create a user-friendly interface so that various parameters could be
-    adjusted, using GUI widgets of your choice (e.g. a slider for M), to suit
+    adjusted, using GUI widgets of your choice (e.g. a slider for `M`), to suit
     different user groups:
 
     -   Constants M, N, and S are individually adjustable.
