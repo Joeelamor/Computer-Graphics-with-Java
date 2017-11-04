@@ -35,7 +35,7 @@ update is based on all previous works.
 
 -   When any horizontal row of squares R has no hole, i.e. all the squares in R
     are parts of some shapes with colors, R is removed and all the rows above R
-    move one square down, `Lines = Lines + 1`; `Score = Score + Level x M`. 
+    move one square down, `Lines = Lines + 1`, `Score = Score + Level x M`. 
 -   If the number of removed rows in the current Level reaches N, `Level = Level + 1`, 
     the falling speed `FS = FS x (1 + Level  x S)`.
 -   When a new shape has no space to fall, i.e. existing shapes in `Main area`
