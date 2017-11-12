@@ -54,6 +54,6 @@ update is based on all previous works.
     -   The size of the square is adjustable (e.g. enlarged for elderly
         players).
 
--   The User interface will display a fixed set of shapes for the player to
+-   The User Interface will display a fixed set of shapes for the player to
     select and add. 
 
